@@ -24,12 +24,19 @@ func main() {
 	dataStruct := []Todo{}
 	v := &dataStruct
 	fmt.Println(dataStruct)
-	json.Unmarshal([]byte(data), v)
+	json.Unmarshal([]byte(data), v) //แปลงค่า Json ไปเป็น struct
 	fmt.Println(dataStruct)
 	//===========================================
-	fmt.Println(len(dataStruct)) //Count Data Json
+	fmt.Println(len(dataStruct))            //Count Data Json
+	dataStruct[0].Completed = true          //จำนวน requester len(dataStruct)
+	result, err := json.Marshal(dataStruct) //แปลงค่า Data Json จาก requester
+	check_err(err)
+	fmt.Println(string(result))
 
-	dataStruct[0].Completed = true
-	dataStruct[1].Completed = true
-
+}
+func check_err(err error) {
+	if err != nil {
+		//panic(err)
+		return
+	}
 }
