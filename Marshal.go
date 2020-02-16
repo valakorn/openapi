@@ -19,7 +19,7 @@ type Todo struct {
 	Completed bool   `json:"completed"`
 }
 
-func main() {
+func Marshal() {
 
 	dataStruct := []Todo{}
 	v := &dataStruct
@@ -27,8 +27,9 @@ func main() {
 	json.Unmarshal([]byte(data), v) //แปลงค่า Json ไปเป็น struct
 	fmt.Println(dataStruct)
 	//===========================================
-	fmt.Println(len(dataStruct))            //Count Data Json
-	dataStruct[0].Completed = true          //จำนวน requester len(dataStruct)
+	fmt.Println(len(dataStruct))   //Count Data Json
+	dataStruct[0].Completed = true //จำนวน requester len(dataStruct)
+
 	result, err := json.Marshal(dataStruct) //แปลงค่า Data Json จาก requester
 	check_err(err)
 	fmt.Println(string(result))
