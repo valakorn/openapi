@@ -17,8 +17,8 @@ func main() {
 	r.POST("/", handler.PostHomePage)
 	r.GET("/query", handler.QueryStrings) // query?name=sunsu&age=24
 	r.GET("/ping", handler.PingGet())
-	r.GET("/newsfeed", handler.NewsfeedPost(feed))
-	r.POST("/newsfeed", handler.NewsfeedGet(feed))
+	r.GET("/newsfeed", handler.NewsfeedGet(feed))
+	r.POST("/newsfeed", handler.NewsfeedPost(feed))
 	r.Run()
 
 	// feed := newsfeed.New()
