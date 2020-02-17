@@ -1,8 +1,10 @@
 package handler
 
 import (
-	"log"
+	"bufio"
+	"fmt"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -10,8 +12,8 @@ import (
 )
 
 type newsfeedPostRequest struct {
-	Title string `json:"title"`
-	Post  string `json:"post"`
+	Title string `json:"title" binding:"required"`
+	Post  string `json:"post" binding:"required"`
 }
 
 func NewsfeedPost(feed newsfeed.Adder) gin.HandlerFunc {
@@ -35,23 +37,54 @@ func NewsfeedPostV1(feed newsfeed.Adder) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var newsFeed newsfeedPostRequest
 
-		if c.ShouldBind(&newsFeed) == nil {
-			log.Println(newsFeed.Title)
-			log.Println(newsFeed.Post)
+		// if err := c.ShouldBindJSON(&newsFeed); err == nil {
+		// 	c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+
+		// }
+
+		if err := c.ShouldBindJSON(&newsFeed); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+
+		} else {
+			// if c.ShouldBind(&newsFeed) == nil {
+			// 	log.Println(newsFeed.Title)
+			// 	log.Println(newsFeed.Post)
+			// }
+
+			today := time.Now()
+			c.JSON(http.StatusOK, gin.H{"status": "Passed", "Time": today})
+			//fmt.Println(today.Format("2020-01-02 15:04:05").String())
+			//fmt.Println(today.String())
+			day_string := today.Format("2006-01-02 15:04:05")
+
+			//========================Update Data In DB==================================
+			var lines = []string{newsFeed.Title, "|", newsFeed.Post, "|", day_string}
+			err := writeLines_main(lines, "D:\\Job\\go_module\\openapi\\httpd\\DBTEXT.txt")
+			//err := writeLines(lines, "DBTEXT.txt")
+			if err != nil {
+				panic(err)
+			}
+
+			//============================================================================
+
 		}
-
-		today := time.Now()
-		c.JSON(http.StatusOK, gin.H{"status": "Passed", "Time": today})
-
-		//========================Update Data In DB==================================
-		var lines = []string{newsFeed.Title}
-		err := writeLines(lines, "DBTEXT.txt")
-		//err := writeLines(lines, "DBTEXT.txt")
-		if err != nil {
-			panic(err)
-		}
-
-		//============================================================================
 
 	}
+}
+
+func writeLines_main(lines []string, path string) error {
+	// overwrite file if it exists
+	//file, err := os.OpenFile("./DBFILE.txt", os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0666)
+	file, err := os.OpenFile(path, os.O_APPEND, os.ModeAppend)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+	w := bufio.NewWriter(file)
+	_, err = fmt.Fprintln(file, lines)
+	if err != nil {
+		return err
+	}
+
+	return w.Flush()
 }

@@ -22,7 +22,8 @@ func main() {
 	router.GET("/query", handler.QueryStrings) // query?name=sunsu&age=24
 	router.GET("/ping", handler.PingGet())
 	router.GET("/newsfeed", handler.NewsfeedGet(feed))
-	router.POST("/newsfeed_v1", handler.NewsfeedPostV1(feed))
+	router.GET("/newsfeedv1", handler.NewsfeedGetv1(feed))
+	router.POST("/newsfeedv1", handler.NewsfeedPostV1(feed))
 	router.POST("/newsfeed", handler.NewsfeedPost(feed))
 
 	s := &http.Server{
