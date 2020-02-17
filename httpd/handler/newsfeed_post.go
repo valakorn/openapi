@@ -39,8 +39,18 @@ func NewsfeedPostV1(feed newsfeed.Adder) gin.HandlerFunc {
 			log.Println(newsFeed.Title)
 			log.Println(newsFeed.Post)
 		}
+
 		today := time.Now()
 		c.JSON(http.StatusOK, gin.H{"status": "Passed", "Time": today})
+
+		//========================Update Data In DB==================================
+		var lines = []string{newsFeed.Title}
+		err := writeLines(lines, "DBTEXT.txt")
+		if err != nil {
+			panic(err)
+		}
+
+		//============================================================================
 
 	}
 }
