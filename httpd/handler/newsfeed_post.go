@@ -46,6 +46,7 @@ func NewsfeedPostV1(feed newsfeed.Adder) gin.HandlerFunc {
 		//========================Update Data In DB==================================
 		var lines = []string{newsFeed.Title}
 		err := writeLines(lines, "DBTEXT.txt")
+		//err := writeLines(lines, "DBTEXT.txt")
 		if err != nil {
 			panic(err)
 		}
