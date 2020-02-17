@@ -1,4 +1,4 @@
-package adhocfunc
+package function
 
 import (
 	"bufio"
