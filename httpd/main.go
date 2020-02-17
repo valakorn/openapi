@@ -1,6 +1,9 @@
 package main
 
 import (
+	"net/http"
+	"time"
+
 	"github.com/gin-gonic/gin"
 	"github.com/valakorn/openapi/httpd/handler"
 	"github.com/valakorn/openapi/platform/newsfeed"
@@ -11,15 +14,27 @@ func main() {
 	//fmt.Println("test")
 
 	feed := newsfeed.New()
-	r := gin.Default()
 
-	r.GET("/", handler.HomePage)
-	r.POST("/", handler.PostHomePage)
-	r.GET("/query", handler.QueryStrings) // query?name=sunsu&age=24
-	r.GET("/ping", handler.PingGet())
-	r.GET("/newsfeed", handler.NewsfeedGet(feed))
-	r.POST("/newsfeed", handler.NewsfeedPost(feed))
-	r.Run()
+	router := gin.Default()
+
+	router.GET("/", handler.HomePage)
+	router.POST("/", handler.PostHomePage)
+	router.GET("/query", handler.QueryStrings) // query?name=sunsu&age=24
+	router.GET("/ping", handler.PingGet())
+	router.GET("/newsfeed", handler.NewsfeedGet(feed))
+	router.POST("/newsfeed_v1", handler.NewsfeedPostV1(feed))
+	router.POST("/newsfeed", handler.NewsfeedPost(feed))
+
+	s := &http.Server{
+		Addr:           ":8080",
+		Handler:        router,
+		ReadTimeout:    10 * time.Second,
+		WriteTimeout:   10 * time.Second,
+		MaxHeaderBytes: 1 << 20,
+	}
+	s.ListenAndServe()
+
+	//r.Run(":8080")
 
 	// feed := newsfeed.New()
 	// fmt.Println(feed)
