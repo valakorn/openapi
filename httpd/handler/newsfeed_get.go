@@ -21,7 +21,8 @@ func NewsfeedGetv1(feed newsfeed.Getter) gin.HandlerFunc {
 		//results := feed.GetAll()
 		//results := []string{"learn golang", "practise execercise", "make coffee"}
 		results := []string{}
-		results = readLines("D:\\Job\\go_module\\openapi\\httpd\\DBTEXT.txt")
+		//results = readLines("D:\\Job\\go_module\\openapi\\httpd\\DBTEXT.txt")
+		results = readLines("./DBTEXT.txt")
 		//results.Execute(w, readLines("todos.txt"))
 
 		c.JSON(http.StatusOK, results)

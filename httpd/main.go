@@ -25,6 +25,7 @@ func main() {
 	router.GET("/newsfeedv1", handler.NewsfeedGetv1(feed))
 	router.POST("/newsfeedv1", handler.NewsfeedPostV1(feed))
 	router.POST("/newsfeed", handler.NewsfeedPost(feed))
+	router.Any("/tcp", handler.Sendtcp)
 
 	s := &http.Server{
 		Addr:           ":8080",

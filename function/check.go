@@ -1,9 +1,9 @@
-package function
+// package function
 
-import "log"
+// import "log"
 
-func check(err error) {
-	if err != nil {
-		log.Fatal(err)
-	}
-}
+// func check(err error) {
+// 	if err != nil {
+// 		log.Fatal(err)
+// 	}
+// }
