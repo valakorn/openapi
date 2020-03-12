@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 	"os"
 	"time"
@@ -52,73 +51,45 @@ func NewsfeedPostV1(feed newsfeed.Adder) gin.HandlerFunc {
 	//return func(c *gin.Context) {
 	return func(c *gin.Context) {
 		var newsFeed newsfeedPostRequest
-		var x interface{}
-		//var v interface{}
-		//var newsfeedpostrep []NewsfeedPostRep
 		//var x interface{}
-		//var Getnewsfeedpostrep
-		//var registerofprespheader []RegisterOfpRespHeader
-
-		// if err := c.ShouldBindJSON(&newsFeed); err == nil {
-		// 	c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-
-		// }
 
 		if err := c.ShouldBindJSON(&newsFeed); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-
 		} else {
-			// if c.ShouldBind(&newsFeed) == nil {
-			// 	log.Println(newsFeed.Title)
-			// 	log.Println(newsFeed.Post)
-			// }
 			today := time.Now()
 			day_string := today.Format("2006-01-02 15:04:05")
 
-			//newsfeedpostrep = append(newsfeedpostrep, NewsfeedPostRep{Timestamp: day_string})
+			//postrep_obj := NewsfeedPostRep{Timestamp: day_string}
 
-			//registerofprespheader = append(registerofprespheader, RegisterOfpRespHeader{ResponseCode: 10})
-			//newsfeedpostr
-			//fmt.Printf("%q\n", newsfeedpostrep)
-			//jsonPessoal, errr := json.Marshal(newsfeedpostrep)
-			//jsonPessoal, errr := json.Marshal(NewsfeedPostRep{Timestamp: day_string}, RegisterOfpRespHeader{ResponseCode: 10})
-			//result := strings.Join(newsfeedpostrep, ",")
-			//func Marshal(v interface{}) ([]byte, error) {
-			jsonPessoal, errr := json.Marshal(NewsfeedPostRep{Timestamp: day_string})
-			//jsonPessoal, errr := json.Marshal(dataposrep)
-			if errr != nil {
-				log.Fatal(err)
+			// ResponseCode int    `json:"responseCode"`
+			// ResponseDesc string `json:"responseDesc"`
+			// WsRefID      string `json:"wsRefId"`
+
+			res := NewsfeedPostRep{Timestamp: day_string, RegisterOfpRespHeader: RegisterOfpRespHeader{ResponseCode: 10}}
+			// RegisterOfpRespHeade := {ResponseCode: 10 , ResponseDesc : "hello world"}
+			//postrep_obj := NewsfeedPostRepppp
+
+			//postrep_obj.RegisterOfpRespHeader.ResponseCode = 10
+
+			jsonPessoal, _ := json.Marshal(res)
+			//fmt.Println(string(jsonPessoal))
+
+			//covtext := fmt.Sprintf("%s %s", jsonPessoal, "MMM:")
+			//jsonPessoal, _ := json.Marshal(NewsfeedPostRep)
+
+			//x = string(jsonPessoal)
+			//c.JSON(http.StatusOK, gin.H{"message": x})
+
+			personMap := make(map[string]interface{})
+			errunma := json.Unmarshal(jsonPessoal, &personMap)
+			if errunma != nil {
+				panic(err)
 			}
-
-			//fmt.Fprintf(os.Stdout, "%s", jsonPessoal)
-			//c.JSON(http.StatusOK, jsonPessoal)
-			//JSON(code int, obj interface{}
-
-			x = string(jsonPessoal)
-			c.JSON(http.StatusOK, gin.H{"message": x})
-			//c.JSON(http.StatusOK, x)
-			//response(c, http.StatusOK, 200, "helloword")
-
-			//fmt.Fprint(w, string(jsonPessoal)) // write response to ResponseWriter (w)
-
-			//foo_marshalled, err := json.Marshal(Foo{Number: 1, Title: "test"})
-
-			//fmt.Fprintf(os.Stdout, "%s", jsonPessoal)
-			//c.Header()
-
-			// c.JSON(http.StatusOK, gin.H{
-			// 	"code":    http.StatusOK,
-			// 	"message": string(jsonPessoal), // cast it to string before showing
-			// })
-			//c.JSON(http.StatusOK, gin.H{"status": "Passed", "Time": today})
-			//fmt.Println(today.Format("2020-01-02 15:04:05").String())
-			//fmt.Println(today.String())
+			c.JSON(http.StatusOK, personMap)
 
 			//========================Update Data In DB==================================
 			var lines = []string{newsFeed.Title, "|", newsFeed.Post, "|", day_string}
-			//err := writeLines_main(lines, "D:\\Job\\go_module\\openapi\\httpd\\DBTEXT.txt")
 			err := writeLines_main(lines, "./DBTEXT.txt")
-			//err := writeLines(lines, "DBTEXT.txt")
 			if err != nil {
 				panic(err)
 			}
@@ -154,3 +125,86 @@ func writeLines_main(lines []string, path string) error {
 
 	return w.Flush()
 }
+
+//===========================Backup=============================================
+// func NewsfeedPostV1(feed newsfeed.Adder) gin.HandlerFunc {
+// 	//return func(c *gin.Context) {
+// 	return func(c *gin.Context) {
+// 		var newsFeed newsfeedPostRequest
+// 		var x interface{}
+// 		//var v interface{}
+// 		//var newsfeedpostrep []NewsfeedPostRep
+// 		//var x interface{}
+// 		//var Getnewsfeedpostrep
+// 		//var registerofprespheader []RegisterOfpRespHeader
+
+// 		// if err := c.ShouldBindJSON(&newsFeed); err == nil {
+// 		// 	c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+
+// 		// }
+
+// 		if err := c.ShouldBindJSON(&newsFeed); err != nil {
+// 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+
+// 		} else {
+// 			// if c.ShouldBind(&newsFeed) == nil {
+// 			// 	log.Println(newsFeed.Title)
+// 			// 	log.Println(newsFeed.Post)
+// 			// }
+// 			today := time.Now()
+// 			day_string := today.Format("2006-01-02 15:04:05")
+
+// 			//newsfeedpostrep = append(newsfeedpostrep, NewsfeedPostRep{Timestamp: day_string})
+
+// 			//registerofprespheader = append(registerofprespheader, RegisterOfpRespHeader{ResponseCode: 10})
+// 			//newsfeedpostr
+// 			//fmt.Printf("%q\n", newsfeedpostrep)
+// 			//jsonPessoal, errr := json.Marshal(newsfeedpostrep)
+// 			//jsonPessoal, errr := json.Marshal(NewsfeedPostRep{Timestamp: day_string}, RegisterOfpRespHeader{ResponseCode: 10})
+// 			//result := strings.Join(newsfeedpostrep, ",")
+// 			//func Marshal(v interface{}) ([]byte, error) {
+// 			jsonPessoal, errr := json.Marshal(NewsfeedPostRep{Timestamp: day_string})
+// 			//jsonPessoal, errr := json.Marshal(dataposrep)
+// 			if errr != nil {
+// 				log.Fatal(err)
+// 			}
+
+// 			//fmt.Fprintf(os.Stdout, "%s", jsonPessoal)
+// 			//c.JSON(http.StatusOK, jsonPessoal)
+// 			//JSON(code int, obj interface{}
+
+// 			x = string(jsonPessoal)
+// 			c.JSON(http.StatusOK, gin.H{"message": x})
+// 			//c.JSON(http.StatusOK, x)
+// 			//response(c, http.StatusOK, 200, "helloword")
+
+// 			//fmt.Fprint(w, string(jsonPessoal)) // write response to ResponseWriter (w)
+
+// 			//foo_marshalled, err := json.Marshal(Foo{Number: 1, Title: "test"})
+
+// 			//fmt.Fprintf(os.Stdout, "%s", jsonPessoal)
+// 			//c.Header()
+
+// 			// c.JSON(http.StatusOK, gin.H{
+// 			// 	"code":    http.StatusOK,
+// 			// 	"message": string(jsonPessoal), // cast it to string before showing
+// 			// })
+// 			//c.JSON(http.StatusOK, gin.H{"status": "Passed", "Time": today})
+// 			//fmt.Println(today.Format("2020-01-02 15:04:05").String())
+// 			//fmt.Println(today.String())
+
+// 			//========================Update Data In DB==================================
+// 			var lines = []string{newsFeed.Title, "|", newsFeed.Post, "|", day_string}
+// 			//err := writeLines_main(lines, "D:\\Job\\go_module\\openapi\\httpd\\DBTEXT.txt")
+// 			err := writeLines_main(lines, "./DBTEXT.txt")
+// 			//err := writeLines(lines, "DBTEXT.txt")
+// 			if err != nil {
+// 				panic(err)
+// 			}
+
+// 			//============================================================================
+
+// 		}
+
+// 	}
+// }

@@ -14,6 +14,8 @@ func main() {
 	//fmt.Println("test")
 
 	feed := newsfeed.New()
+	feedtcp := newsfeed.TcpNew()
+	cbsinfoRequest := newsfeed.CbsinfoservicesItemRepoNew()
 
 	router := gin.Default()
 
@@ -25,7 +27,8 @@ func main() {
 	router.GET("/newsfeedv1", handler.NewsfeedGetv1(feed))
 	router.POST("/newsfeedv1", handler.NewsfeedPostV1(feed))
 	router.POST("/newsfeed", handler.NewsfeedPost(feed))
-	router.Any("/tcp", handler.Sendtcp)
+	router.POST("/tcp", handler.Sendtcp(feedtcp))
+	router.POST("/CBSInfoServices", handler.Func_cbsinfoservices(cbsinfoRequest))
 
 	s := &http.Server{
 		Addr:           ":8080",
@@ -42,4 +45,10 @@ func main() {
 	// fmt.Println(feed)
 	// feed.Add(newsfeed.Item{"Hello", "How ya doing mate?"})
 	// fmt.Println(feed)
+
+	//Set global node ["^hello", "world"] to "Go World" #########################################
+	// err := yottadb.SetValE(yottadb.NOTTP, nil, "Go World", "^hello", []string{"world"})
+	// if err != nil {
+	// 	panic(err)
+	// }
 }
